@@ -16,7 +16,7 @@ files = []
 #init token 
 bot = telebot.TeleBot('your token')
 brand = " "
-token = '5235250024:AAFn1MHDZy31aF9izO7U74trm1roqB_5NLg'
+token = ''
 brands = ["get_teneleven" , "get_joe_lo", "get_jasson_lo","get_topface" ,"get_misstais" , "get_fabio" , "get_belucci" , "get_elitario"]
 reasons = ["delay_and_damaged_box" , "not_base_function" , "base_function" ,"color_or_description"]
 #get random ideficator 
