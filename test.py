@@ -46,7 +46,7 @@ def write_data_about_user_to_db(name,user_id,marketplace , category , brand , ph
     try:
     # Connection to current database
         connection = psycopg2.connect(user="postgres",
-                                  password="elkin",
+                                  password="password",
                                   host="127.0.0.1",
                                   port="5432")
         connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
