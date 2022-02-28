@@ -1,7 +1,7 @@
 #   Telegram bot algorithm for collecting data about damaged goods
 #   Author: Mikhail Shishov  
 #   Email:fandimfromitaly@yandex.ru
-#   last time edited : 26.02.2022
+#   last time edited : 28.02.2022
 import telebot;
 from telebot import types
 import psycopg2
@@ -10,14 +10,14 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import sqlite3 
 import datetime
 import random
-
+from start_component import *
 files = []
 
 #init token 
-bot = telebot.TeleBot('your_token')
+bot = telebot.TeleBot('5235250024:AAFn1MHDZy31aF9izO7U74trm1roqB_5NLg')
 brand = " "
 token = '5235250024:AAFn1MHDZy31aF9izO7U74trm1roqB_5NLg'
-brands = ["get_teneleven" , "get_joe_lo", "get_jasson_lo","get_topface" ,"get_miss_tais" , "get_fabio" , "get_belucci" , "get_elitario"]
+brands = ["get_teneleven" , "get_joe_lo", "get_jasson_lo","get_topface" ,"get_misstais" , "get_fabio" , "get_belucci" , "get_elitario"]
 reasons = ["delay_and_damaged_box" , "not_base_function" , "base_function" ,"color_or_description"]
 #get random ideficator 
 def get_uniqe_id():
@@ -25,7 +25,9 @@ def get_uniqe_id():
     id = random.randint(10,92323453)
     return id   
 
-
+answer_about_marketplace_mistake = "Спасибо , что ответили на уточняющие вопросы, теперь мы сможем быстрее помочь вам в решении возникшей проблеме. Также хотим поблагодарить вас за проявленное терпение. Мы, как продавец, отгружаем товар в течение 12 часов после поступления заказа, всё дальнейшее ожидание зависит от скорости логистических процессов маркетплейса. аркетплейса. Встав на вашу сторону, мы прекрасно понимаем, что подобные инциденты неприемлемы поэтому, несмотря на то, что от нас эти процессы не зависят, мы всё же направим запросы в службу поддержки с целью решить ваш вопрос. ос. Нам важно, чтобы у вас остался позитивный опыт, поэтому на следующую покупку дарим вам скидку в размере 10% на весь наш ассортимент."
+answer_two = "нт. Я передам эту информацию ответственному сотруднику и он в ближайшее время отправит вам промокод. Будем признательны, если вы поддержите нас отзывом. Надеемся, нам удалось решить возникший инцидент. Если же у вас остались вопросы - нажмите 'МЕНЕДЖЕР'.Если возникли вопросы по другому товару - отправьте 'СТАРТ' Желаем хорошего дня и приятных покупок!"
+answer = answer_about_marketplace_mistake + answer_two
 name = " "
 user_id  = 0
 photo = " "
@@ -125,7 +127,7 @@ def start(message):
         key_indigrient_three = types.InlineKeyboardButton(text='KazanExpress' , callback_data='get_kazanexpress')
         keyboard.add(key_indigrient_three)
         bot.send_message(message.from_user.id , text="Где вы оформляли заказ?" , reply_markup=keyboard)
-    if message.text == "/send_photos":
+    if message.text == "/send_all_photos":
         for i in range(len(files)):
             photo=open('files/'+files[i] , 'rb')
             bot.send_photo(message.from_user.id , photo)
@@ -148,14 +150,14 @@ def get_brand(call ,brand ):
         keyboard.add(key_indigrient_two)
         key_indigrient_three = types.InlineKeyboardButton(text='Jasson lo' , callback_data='get_jasson_lo')
         keyboard.add(key_indigrient_three)
-        bot.send_message(call.from_user.id , text="Выберите категорию, к которой относится ваш товар:" , reply_markup=keyboard)
+        bot.send_message(call.from_user.id , text="Выберите брэнд, к которой относится ваш товар:" , reply_markup=keyboard)
     if brand == "get_cosmetics":
         keyboard = types.InlineKeyboardMarkup() 
         key_indigrient_one = types.InlineKeyboardButton(text='Topface ' , callback_data='get_topface')
         keyboard.add(key_indigrient_one)
         key_indigrient_two = types.InlineKeyboardButton(text='Miss Tais' , callback_data='get_misstais')
         keyboard.add(key_indigrient_two)
-        bot.send_message(call.from_user.id , text="Выберите категорию, к которой относится ваш товар:" , reply_markup=keyboard)
+        bot.send_message(call.from_user.id , text="Выберите брэнд, к которой относится ваш товар:" , reply_markup=keyboard)
     if brand == "get_musican":
         keyboard = types.InlineKeyboardMarkup() 
         key_indigrient_one = types.InlineKeyboardButton(text='Fabio' , callback_data='get_fabio')
@@ -164,20 +166,23 @@ def get_brand(call ,brand ):
         keyboard.add(key_indigrient_two)
         key_indigrient_three = types.InlineKeyboardButton(text='Elitaro' , callback_data='get_elitaro')
         keyboard.add(key_indigrient_three)
-        bot.send_message(call.from_user.id , text="Выберите категорию, к которой относится ваш товар:" , reply_markup=keyboard)
+        bot.send_message(call.from_user.id , text="Выберите брэнд, к которой относится ваш товар:" , reply_markup=keyboard)
 #display menu where user can choose reason his dissatisfaction
 def choose_reason(call):
-    keyboard = types.InlineKeyboardMarkup() 
-    key_indigrient_one = types.InlineKeyboardButton(text='- Задержка доставки - Поврежденная упаковка' , callback_data='delay_and_damaged_box')
+    keyboard = types.InlineKeyboardMarkup()
+     
+    key_indigrient_one = types.InlineKeyboardButton(text='- Задержка доставки ' , callback_data='mistake_of_marketplace')
     keyboard.add(key_indigrient_one)
-    key_indigrient_two = types.InlineKeyboardButton(text='Дефект не влияющй на основную функцию продукта ' , callback_data='not_base_function')
+    key_indigrient_two = types.InlineKeyboardButton(text='- Поврежденная упаковка ' , callback_data='mistake_of_marketplace')
     keyboard.add(key_indigrient_two)
     key_indigrient_three = types.InlineKeyboardButton(text='Дефект делающий использование продукта невозможным' , callback_data='base_function')
     keyboard.add(key_indigrient_three)
     key_indigrient_fourth = types.InlineKeyboardButton(text='Несоответствие цвета/описания' , callback_data='color_or_description')
     keyboard.add(key_indigrient_fourth)
-    key_indigrient_fith = types.InlineKeyboardButton(text='Что-то другое...' , callback_data='something_other')
+    key_indigrient_fith = types.InlineKeyboardButton(text='- Дефект, не влияющий на основную функцию продукта' , callback_data='not_base_function')
     keyboard.add(key_indigrient_fith)
+    key_indigrient_six = types.InlineKeyboardButton(text='Что-то другое' , callback_data='something_other')
+    keyboard.add(key_indigrient_six)
     bot.send_message(call.from_user.id , text="Выберите из перечня причину инцидента:" , reply_markup=keyboard)
 
 
@@ -212,6 +217,18 @@ def callback_handler(call):
     if call.data in reasons:
         permission_to_send_photo = True
         bot.send_message(call.message.chat.id , "Пожалуйста, приложите фотографии, где будет виден дефект и опишите его. Так же, не забудьте указать номер вашего заказа.В ближайшее время с вами свяжется наш сотрудник и поможет в решении сложившейся ситуации. ")
-           
+    if call.data == "mistake_of_marketplace":
+        bot.send_message(call.message.chat.id , answer )
+        keyboard = types.InlineKeyboardMarkup() 
+        key_indigrient_one = types.InlineKeyboardButton(text='МЕНЕДЖЕР' , callback_data='MENAGER')
+        keyboard.add(key_indigrient_one)
+        key_indigrient_two = types.InlineKeyboardButton(text='СТАРТ' , callback_data='START')
+        keyboard.add(key_indigrient_two)
+        bot.send_message(call.from_user.id , text="Меню" , reply_markup=keyboard)
+    if call.data == "START":
+        print("start")
+        bot.send_message(call.from_user.id , text="Нажмите /start" )
+    if call.data == "MENAGER":
+        print("menager")
 #start bot 
 bot.polling(none_stop=True , interval=0)        
