@@ -14,7 +14,7 @@ from start_component import *
 files = []
 
 #init token 
-bot = telebot.TeleBot('5235250024:AAFn1MHDZy31aF9izO7U74trm1roqB_5NLg')
+bot = telebot.TeleBot('your token')
 brand = " "
 token = '5235250024:AAFn1MHDZy31aF9izO7U74trm1roqB_5NLg'
 brands = ["get_teneleven" , "get_joe_lo", "get_jasson_lo","get_topface" ,"get_misstais" , "get_fabio" , "get_belucci" , "get_elitario"]
