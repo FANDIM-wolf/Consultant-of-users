@@ -1,7 +1,7 @@
 #   Telegram bot algorithm for collecting data about damaged goods
 #   Author: Mikhail Shishov  
 #   Email:fandimfromitaly@yandex.ru
-#   last time edited : 5.03.2022
+#   last time edited : 9.03.2022
 import telebot;
 from telebot import types
 import psycopg2
@@ -15,7 +15,7 @@ from start_component import *
 files = []
 
 #init token 
-bot = telebot.TeleBot('5156581426:AAFZuke4ELUG41V0dPGrpngz8wOAVm763tc')
+bot = telebot.TeleBot('token')
 brand = " "
 
 brands = ["get_teneleven" , "get_joe_lo", "get_jasson_lo","get_topface" ,"get_misstais" , "get_fabio" , "get_belucci" , "elitario"]
@@ -50,7 +50,7 @@ def write_data_about_user_to_db(name,user_id,marketplace , category , brand , ph
     try:
     # Connection to current database
         connection = psycopg2.connect(user="postgres",
-                                  password="elkin",
+                                  password="password",
                                   host="127.0.0.1",
                                   port="5432")
         connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -93,13 +93,13 @@ def write_data_about_user_to_db(name,user_id,marketplace , category , brand , ph
 #get_data_from_data_base()
 
 def send_details_to_menager(name):
-    bot.send_message( 1959493547, text="Nickname:@"+name)
-    bot.send_message( 1959493547, text="Category:"+category )
-    bot.send_message( 1959493547, text="Brand:"+brand )
-    bot.send_message( 1959493547, text="Marketplace:"+marketplace )
+    bot.send_message( id, text="Nickname:@"+name)
+    bot.send_message( id, text="Category:"+category )
+    bot.send_message( id, text="Brand:"+brand )
+    bot.send_message( id, text="Marketplace:"+marketplace )
     print(files)
     for i in range(len(files)):
-        bot.send_photo(1959493547, photo=open("files/"+files[i], 'rb'))
+        bot.send_photo(id, photo=open("files/"+files[i], 'rb'))
 
     #delete last file in array    
     files.pop()
@@ -266,20 +266,20 @@ def callback_handler(call):
         print("start")
         bot.send_message(call.from_user.id , text="Нажмите /start" )
     if call.data == "MENAGER":
-        bot.send_message(1959493547 , text="Клиенту нужна помошь" )
-        bot.send_message(1959493547 , text="PROMOCODE:"+promocode )
+        bot.send_message(id , text="Клиенту нужна помошь" )
+        bot.send_message(id , text="PROMOCODE:"+promocode )
         bot.send_message(call.message.chat.id, text="Отправлено менеджеру" )
         print("menager")
     if call.data == "PROMOCODE":
         promocode = "yep"
-        bot.send_message(1959493547 , text="Клиенту нужна помошь" )
-        bot.send_message(1959493547, text="PROMOCODE:"+promocode )
+        bot.send_message(id , text="Клиенту нужна помошь" )
+        bot.send_message(id , text="PROMOCODE:"+promocode )
         bot.send_message(call.message.chat.id ,text="Отправлено менеджеру" )
         print("menager")
     if call.data == "something_other":
         global answer_for_something_another 
-        bot.send_message(1959493547 , text="Клиенту нужна помошь" )
-        bot.send_message(1959493547 , text=name )
+        bot.send_message(id , text="Клиенту нужна помошь" )
+        bot.send_message(id , text=name )
         #bot.send_message(call.message.chat.id , text=name )
         bot.send_message(call.message.chat.id ,text=answer_for_something_another)
         print("username:",name)
